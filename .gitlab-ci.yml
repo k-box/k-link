@@ -1,0 +1,9 @@
+generate_docker:
+  stage: build
+  tags:
+    - shell
+    - deploy
+  script:
+    - docker build -t $CI_REGISTRY_IMAGE:${CI_BUILD_REF_NAME/v/} .
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
+    - docker push $CI_REGISTRY_IMAGE:${CI_BUILD_REF_NAME/v/}

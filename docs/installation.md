@@ -1,7 +1,7 @@
 # Installation
 
-**TODO: Revision needed on the whole document**
+_to be written_
 
-## Simple installation
+## Production installation
 
 ## Development installation
