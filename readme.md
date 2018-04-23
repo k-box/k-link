@@ -1,36 +1,38 @@
 # K-Link
 
+> the encouraging knowledge management solution
+
 ![](./klink-explore-static.png)
 
-The K-Link is a document network that connects different [K-Boxes](https://git.klink.asia/main/k-box) or 
-other clients to enable knowledge sharing and retrieval.
+The [K-Link](https://k-link.technology) is a technology for public organizations, private companies and diverse communities to build strong institutional memories and foster cooperation by interconnecting information sources of partners.
 
 ## Getting started with K-Link
 
 K-Link is made up by different components:
 
 - The [K-Link Explore site](./docs/website.md), contained in this repository
-- The [K-Link Registry](https://git.klink.asia/main/k-link-registry) for controlling who can access 
-  the network and publish documents
-- The [K-Search API](https://git.klink.asia/main/k-search), for adding, searching and removing documents
-- And the optional [K-Link Video Streaming Service](https://git.klink.asia/main/video-streaming-service) if video playback on Mobile devices is needed
+- The [K-Link Registry](https://github.com/k-box/k-link-registry) for controlling what applications can access 
+  the network and their permission
+- The [K-Search API](https://github.com/k-box/k-search), for adding, searching and removing documents
+- And the optional [K-Link Video Streaming Service](https://github.com/k-box/k-link-video-streaming) if video playback on Mobile devices is needed
 
-### Installation
-
-K-Link can be installed on most Operating Systems. The current suggested approach is to use [Docker](https://www.docker.com/) and the [K-Setup](https://git.klink.asia/main/k-setup) utility.
-
-**Requirements**
+### Requirements
 
 In order to run the K-Link
 
 - 64bit Operating System supported by Docker (e.g. Debian, Ubuntu,...)
 - [Docker](https://www.docker.com/) and Docker compose
-- A modern web browser (e.g. Edge 15+, Chrome, Firefox, Safari, Opera together with their mobile counterparts)
 - At least 4GB of free hard drive space for the installation
 - 4GB of RAM (8GB is better)
-- An Intel Core i5 processor
+- A x86-64 (“64 bit”) processor is required. h264 acceleration is optional, but recommended if the video streaming service is deployed.
 
-[Learn more about how to install a K-Link instance](./docs/installation.md)
+For actions/components that requires a web browser, the K-Link support modern web browser (e.g. Edge 15+, Chrome, Firefox, Safari, and Opera together with their mobile counterparts).
+
+### Installation
+
+K-Link can be installed on most Operating Systems. The setup is heavily based on [Docker](https://www.docker.com/).
+
+[Learn more about how to install a K-Link](./docs/installation.md)
 
 ## K-Link Explore 
 
@@ -47,3 +49,5 @@ The contribution guide is not available yet, but in the meantime you can still s
 ## License
 
 The K-Link components are generally licensed with AGPL v3 unless specified differently in the respecting repositories.
+
+The K-Link Explore website (this repository) is licensed under AGPL v3. See [License.txt](./LICENSE.txt).
