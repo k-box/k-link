@@ -3,5 +3,8 @@
 output
 Dockerfile
 .dockerignore
+.gitignore
 docker-compose.yml
 readme.md
+.gitlab-ci.yml
+docs/
