@@ -1,6 +1,6 @@
-# K-Link Explore Static landing page
+# K-Link Explore
 
-K-Link Explore is a static website used as default entrypoint for a K-Link deployment.
+K-Link Explore is a static landing page, used as default entrypoint for a K-Link deployment.
 
 **Browser Support**
 
@@ -14,12 +14,14 @@ In addition to modern browsers we support IE10 (on best effort) and IE11. IE 9 a
 Suggested usage is with the Docker image. The Docker image contains an NGINX proxy, which will serve all the static content on port 80.
 
 ```
-docker pull docker.klink.asia/alessio.vertemati/klink-explore-static
+docker pull docker.klink.asia/images/k-link
 ```
+
+> This will pull the latest version, if you want a specific version append the version tag to the Docker image name, e.g. `docker.klink.asia/images/k-link:0.1.0`
 
 ## Development
 
-The website is generate using a single html file, called `index.html`
+The website content is located in the `/source` directory. The `index.html` file is the main entrypoint. 
 
 ### Preview your site
 
@@ -31,9 +33,9 @@ The website can be generated and browsed via a Docker image.
  
 ```bash
 # Building the image
-docker build -t klink-explore-static .
+docker build -t k-link .
 
-# Running it
-docker run --rm -p 8000:80 klink-explore-static
+# Running it (this will only run the static website)
+docker run --rm -p 8000:80 k-link
 ```
 
