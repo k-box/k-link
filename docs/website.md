@@ -1,6 +1,6 @@
-# K-Link Explore
+# K-Link Website
 
-K-Link Explore is a static landing page, used as default entrypoint for a K-Link deployment.
+K-Link Website is a static landing page, used as default entry-point for a K-Link deployment.
 
 **Browser Support**
 
@@ -21,7 +21,7 @@ docker pull docker.klink.asia/images/k-link
 
 ## Development
 
-The website content is located in the `/source` directory. The `index.html` file is the main entrypoint. 
+The website content is located in the `/source` directory. The `index.html` file is the main entrypoint.
 
 ### Preview your site
 
@@ -30,7 +30,7 @@ You can preview your local development with any webserver.
 ## Docker image
 
 The website can be generated and browsed via a Docker image.
- 
+
 ```bash
 # Building the image
 docker build -t k-link .
@@ -38,4 +38,3 @@ docker build -t k-link .
 # Running it (this will only run the static website)
 docker run --rm -p 8000:80 k-link
 ```
-
