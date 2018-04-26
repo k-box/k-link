@@ -1,182 +1,91 @@
+---
+Title: Installation
+Description: How to install the K-Link
+---
+
 # Installation
 
-The K-Link components are available as a [Docker](https://www.docker.com/) images. 
+The K-Link components are available as a [Docker](https://www.docker.com/) images.
 
 This guide will walk you through the installation and configuration of a K-Link instance on a Linux based OS.
 
 ## Prerequisites
 
-- meet the [hardware requirements](./requirements.md)
-- a clean new installation of Debian 9 (64 bit), Ubuntu or other [Docker supported OS](https://docs.docker.com/install/#server)
-- [Docker](https://docs.docker.com/install/linux/docker-ce/debian/) and [Docker Compose](https://docs.docker.com/compose/install/) installed
-- a properly configured DNS that resolves requests to your domain name, e.g. `my.box.tld`, is required if you want to expose the K-Link on the internet.
+- meet the [hardware requirements](./requirements.md);
+- Use an operating system [supported by Docker](https://docs.docker.com/install/#server) (we recommend GNU/Linux; we use [Debian](https://debian.org) 9);
+- [Docker](https://docs.docker.com/install/linux/docker-ce/debian/) and [Docker Compose](https://docs.docker.com/compose/install/) installed.
 
+## Installation
 
-## Environment preparation
+### Environment
 
-Once [Docker](https://docs.docker.com/install/linux/docker-ce/debian/) and [Docker Compose](https://docs.docker.com/compose/install/) are installed, the directory that will contain the installation can be created.
+First create a directory, which will contain all files needed for the installation. For example, we use `~/deploy/k-link/`.
 
-In the setup directory, called `~/deploy/k-link/`, we are going to create the configuration file, called `docker-compose.yml`, that contain the specific setup, and the sub-folders to contain the data.
-
-The folder structure should look like
-
-```
-|-- deploy/k-link/
-    |-- storage
-        |-- data
-        |-- index
-        |-- database
-    |-- docker-compose.yml
-```
-
-The K-Link repository offers an example [`docker-compose.yml`](../docker-compose.example.yml) file that includes the required services.
+In this directory we are going to create a configuration file with the name `docker-compose.yml`. It will contain the specific setup, and the sub-folders to hold all the data. For an easy start, the K-Link code comes with an [example file](../docker-compose.example.yml), which already includes all required services. You can just copy it over and rename it:
 
 ```bash
-cd deploy/k-link/
-curl -o docker-compose.yml https://github.com/k-box/k-link/blob/master/docker-compose.example.yml
+curl -o docker-compose.yml https://raw.githubusercontent.com/k-box/k-link/master/docker-compose.example.yml
 ```
 
-The docker compose file defines 5 services:
+Within this docker compose file, there are five services defined:
 
-1. `klink`, the K-Link courtesy website
-2. `registry`, the [K-Link Registry](https://github.com/k-box/k-link-registry)
-3. `registry-db`, the MariaDB database of the K-Link Registry
-4. `ksearch`, the [K-Search API](https://github.com/k-box/k-search) layer
-5. `engine`, the [K-Search Engine](https://github.com/k-box/k-search-engine) layer
+1. `klink`, [K-Link Website](./website.md);
+2. `registry`, [K-Link Registry](https://github.com/k-box/k-link-registry);
+3. `registry-db`, a database (MariaDB) for the K-Link Registry;
+4. `ksearch`, the [K-Search](https://github.com/k-box/k-search) API;
+5. `engine`, the [K-Search Engine](https://github.com/k-box/k-search-engine) based on Apache SOLR.
 
-Each service indicate which Docker Image to use and the basic environment variables. Per default configuration the data saved in each service is not persisted on disk and uses the Docker dynamic volumes.
+Each service indicate which Docker image to use and some basic environment variables.
 
-First, we want to make the stored document, the database and the search engine persistent accross restart and upgrades.
-For each service we uncomment the `volumes` configuration
-
-```yml
- volumes:
- - "./storage/data:/var/www/k-search/var/data-downloads"
-```
-
-> `./` means that the same level as the `docker-compose.yml` file
+**Please note:** Per default configuration, the data is saved inside the same directory you located the `docker-compose.yml`, inside a directory called `storage`.
 
 ## Configuration
 
-The example Docker Compose file contains suitable defaults for most of the configuration, but sometimes you might want to change those defaults.
-In particular is mandatory to change:
+The example `docker-compose.yml` file contains already suitable defaults for most of the configuration and if you want to test the Software locally, just go ahead without any modification: You will be able to login to the K-Link Registry with `admin` and the password `123456789`.
 
-- The database password (`MYSQL_ROOT_PASSWORD`,`MYSQL_PASSWORD`,`DATABASE_PASSWORD`)
-- The K-Registry admin user and password (`KREGISTRY_ADMIN_USERNAME`, `KREGISTRY_ADMIN_PASSWORD`)
-- The K-Registry App Key (`APP_SECRET`)
-- The K-Registry domain (`KREGISTRY_DOMAIN`)
+When running this K-Link on a server make sure you adjust at least the following variables:
 
-### Database
+- The domain the K-Link is running: `KREGISTRY_DOMAIN`
+- Admin user and password for the K-Link Registry: `KREGISTRY_ADMIN_USERNAME`, `KREGISTRY_ADMIN_PASSWORD`
+- Alter the used database passwords: `MYSQL_ROOT_PASSWORD`, `MYSQL_PASSWORD`, `DATABASE_PASSWORD`
+- Define freely a different application key for the K-Link Registry: `APP_SECRET`
 
-The `database` requires two passwords, the first is the root password and the second is the user password for accessing the specific new database.
+Learn more about the [deployment configuration](./deploy-configuration.md).
 
-```yaml
-MYSQL_ROOT_PASSWORD: "238..."
-MYSQL_PASSWORD: "b25..."
-```
+### Download and start
 
-The `MYSQL_PASSWORD` password must be copied in the `kregistry` service configuration as `DATABASE_PASSWORD`
+Once the configuration file has been saved, you can make Docker to download the required images and start up the services.
 
-```yaml
-DATABASE_PASSWORD: "b25..."
-```
-
-### K-Registry
-
-The K-Registry component has some configuration parameters that depend on the deployment.
-
-All the configuration can be done using environment variables attached to the `registry` service.
-
-#### Administrator account
-
-The default administrator account of the K-Registry is configured at startup, the username and the password are specified in the configuration file as
-
-```yaml
-KREGISTRY_ADMIN_USERNAME: "admin@registry.local"
-KREGISTRY_ADMIN_PASSWORD: "*******"
-```
-
-> **The password must be specified encrypted using bcrypt**
-
-> The minimum password length is 8 characters.
-
-#### Application Key
-
-The application key serve to secure user sessions and other encrypted data. It must be set to a 32 characters string.
-
-```yaml
-APP_SECRET: "32 characters string"
-```
-
-#### K-Registry URL
-
-The K-Registry needs to know the public URL that will be used to access it.
-
-If the K-Registry will be exposed through a secure connection, specify here the HTTPS protocol
-
-```yaml
-KLINK_DMS_APP_URL: "https://my.box.tld/"
-```
-
-The default configuration, contained in the `docker-compose.yml` file, exposes the K-Registry on localhost, without https and on port `8080`.
-
-#### K-Registry email configuration
-
-The K-Registry requires a valid email SMTP configuration, as user registration requires email validation.
-
-```yaml
-MAILER_HOST: "smtp.registry.local"
-MAILER_PORT: "587"
-MAILER_USER: "user@registry.local"
-MAILER_PASSWORD: "test"
-MAILER_SENDER_ADDRESS: "kregistry@registry.local"
-MAILER_SENDER_NAME: "K-Registry"
-```
-
-### K-Link
-
-The K-Link does not have specific configuration.
-
-It worth mention that by default, the docker-compose.yml example file, exposes the port 8080 as the main communication port. 
-
-The `klink` service is realized using NGINX and proxies calls to other services according to:
-
-- K-Search api will be available on `/api`
-- K-Search Swagger documentation will be available on `/docs`
-- K-Registry will be available on `/registry`
-
-## First startup
-
-Once the configuration file is saved, we can start pulling the required Docker images. We can do it with
-
-```bash
-docker-compose pull
-```
-
-This operation might take a while.
-
-After all images are downloaded the K-Link can be started with
+Just execute in your directory:
 
 ```bash
 docker-compose up --detach
 ```
 
-This will execute the [startup in detached mode](https://docs.docker.com/compose/reference/up/).
+_Running this for the first time, this step will download quite a lot of data and might take a while._
 
-The startup process can be followed with
+Afterwards K-Link will be available:
 
-```bash
-docker-compose ps
-```
+- the K-Link Website on: http://localhost:8181/
+- the interface of the K-Link Registry on: http://localhost:8181/registry
+- the endpoint of the K-Search API on: http://localhost:8181/api
+- and the K-Search API Swagger documentation on: http://localhost:8181/docs
 
-Some services might take some time to startup, using the command `docker-compose logs --follow {service}` will print and follow the log of the specified `{service}`.
+### Useful commands
 
-> if `docker-compose ps` shows containers, e.g. `klink_registry_1`, terminated with `Exit 1` (or other) codes means that something in the `registry` startup failed.
+There are some handy commands you can use to manage your K-Link:
 
-Once the startup process is complete, open the browser and navigate to http://localhost:8080.
+| Function | Command |
+|----------|---------|
+| Start K-Link | `docker-compose up --detach` |
+| Stop K-Link | `docker-compose stop` |
+| Check status of running instances | `docker-compose ps` |
+| See logs | `docker-compose logs --follow` |
+
+**Please note**: Make sure you execute all these commands inside the directory you placed the `docker-compose.yml` file.
+
+For more information see complete [documentation on Docker Compose](https://docs.docker.com/compose/reference/up/).
 
 ## Next
 
-- [First use](./first-use.md)
 - [Running behind a reverse proxy](./reverse-proxy.md)
-

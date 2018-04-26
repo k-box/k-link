@@ -1,10 +1,10 @@
-## 
+##
 ## Example Docker Compose file
 ##
 ## This example shows how to expose the K-Link on localhost
 ## For more information please check ./docs/installation.md
 ##
-## Lines that starts with "##" are comments, lines that starts 
+## Lines that starts with "##" are comments, lines that starts
 ## with "#" are optional or advanced configurations, that can be
 ## uncommented if needed
 ##
@@ -25,10 +25,8 @@ services:
       MYSQL_PASSWORD: "b25..."
     networks:
       - internal
-    ## Using automatic volumes, 
-    ## uncomment the next lines and specify a folder on disk to persist the database
-    # volumes:
-    # - "./storage/database:/var/lib/mysql"
+    volumes:
+      - "./storage/database:/var/lib/mysql"
 
   ## the K-Registry
   registry:
@@ -41,11 +39,11 @@ services:
       DATABASE_PASSWORD: "b25..." # make sure is equal to MYSQL_PASSWORD
       ## K-Registry external access and default administrator
       KREGISTRY_BASE_PROTOCOL: "http"
-      KREGISTRY_DOMAIN: "localhost:8080"
+      KREGISTRY_DOMAIN: "localhost:8181"
       KREGISTRY_BASE_URL_PATH: "/registry/" # required as the registry will be proxied on the /registry path
-      KREGISTRY_ADMIN_USERNAME: "admin@registry.local"
-      KREGISTRY_ADMIN_PASSWORD: "insert a bcrypt encrypted password"
-      APP_SECRET: "32 ascii chars"
+      KREGISTRY_ADMIN_USERNAME: "admin"
+      KREGISTRY_ADMIN_PASSWORD: "$2a$04$8PtF9FAbfKNvfamRnHhNh.aLujdrqdKqAgPQiEcEd3htxvXcYShN6" # insert a bcrypt encrypted password
+      APP_SECRET: "2ffa8bc059abc54b195efg56b2fht0dc" # 32 ascii chars
       ## Mail service configuration, values are for example only, change them according to your mail server
       MAILER_HOST: "smtp.registry.local"
       MAILER_PORT: "587"
@@ -63,10 +61,8 @@ services:
   ## The Search Engine service
   engine:
     image: "docker.klink.asia/images/k-search-engine:0.4.1"
-    ## Using automatic volumes, 
-    ## uncomment the next lines and specify a folder on disk to persist the search index
-    # volumes:
-    # - "./storage/index:/opt/solr/k-search/k-search/data"
+    volumes:
+      - "./storage/index:/opt/solr/k-search/k-search/data"
     expose:
       - "8983"
     environment:
@@ -91,10 +87,8 @@ services:
       - KLINK_REGISTRY_ENABLED=0
       ## A valid URL needs to be specified for the registry, even if the integration is disabled
       - KLINK_REGISTRY_API_URL=http://registry/
-    ## Using automatic volumes, 
-    ## uncomment the next lines and specify a folder on disk to persist the search index
-    # volumes:
-    # - "./storage/data:/var/www/k-search/var/data-downloads"
+    volumes:
+      - "./storage/data:/var/www/k-search/var/data-downloads"
     depends_on:
       - engine
       - registry
@@ -104,7 +98,7 @@ services:
   klink:
     image: "docker.klink.asia/images/k-link:0.1.0"
     ports:
-      - 8080:80
+      - 8181:80
     depends_on:
       - ksearch
     networks:

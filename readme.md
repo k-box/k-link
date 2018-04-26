@@ -1,55 +1,54 @@
 # K-Link
 
-> the encouraging knowledge management solution
+Connects various information sources to a common digital library and provides search, retrieval and exchange of information from different platforms.
 
-![](./klink-explore-static.png)
+![K-Link Logo](./docs/files/k-link-logo.png)
 
-The [K-Link](https://k-link.technology) is a technology for public organizations, private companies and diverse communities to build strong institutional memories and foster cooperation by interconnecting information sources of partners.
+Please **[visit the website](http://k-link.technology)** for more information!
 
-## Getting started
+If you find any issues with this application, please report them at the [issue tracker](./issues). Contributions are both encouraged and appreciated. If you like to contribute please check the website for more information.
 
-K-Link is composed by different components:
+The upstream repository is at: https://github.com/k-box/k-link
 
-- The [K-Link Explore site](./docs/website.md), contained in this repository
-- The [K-Link Registry](https://github.com/k-box/k-link-registry) for controlling what applications can access 
-  the network and their permission
-- The [K-Search API](https://github.com/k-box/k-search), for adding, searching and removing documents
-- And the optional [K-Link Video Streaming Service](https://github.com/k-box/k-link-video-streaming) if video playback on Mobile devices is needed
+![](./docs/files/k-link-screenshot.png)
 
-[Want to know more about the architecture, explore the internals](./docs/index.md)
+## Installation
 
-### Requirements
+K-Link can be installed on most operating systems. The installation is heavily based on [Docker](https://www.docker.com/).
 
-In order to run the K-Link
+### Prerequisites
 
-- [Docker](https://www.docker.com/) and Docker compose
-- 64bit Operating System supported by Docker (e.g. Debian, Ubuntu,...)
-- At least 5GB of free hard drive space for the installation
-- 2GB of RAM (4GB is better)
-- A x86-64 (“64 bit”) processor is required. H264 acceleration is optional, but recommended if the video streaming service is deployed.
+- Check the [system requirements](./docs/requirements.md).
+- Use an operating system [supported by Docker](https://docs.docker.com/install/#server) (ideally GNU/Linux; we use [Debian](https://debian.org))
+- Make sure you have installed a recent version of [Docker](https://docs.docker.com/install/linux/docker-ce/debian/) and [Docker Compose](https://docs.docker.com/compose/install/).
 
-[See the complete list of requirements](./docs/requirements.md)
+### Simplest installation
 
-### Installation
+These few commands allow you to quickly install a K-Link **locally** on your computer for testing purposes.
 
-K-Link can be installed on most Operating Systems. The setup is heavily based on [Docker](https://www.docker.com/).
+* Create a directory: `mkdir k-link && cd k-link`
+* Download configuration file: `curl -o docker-compose.yml https://raw.githubusercontent.com/k-box/k-link/master/docker-compose.example.yml`
+* Start up services: `docker-compose up -d` (running this for the first time, it will download a lot of data and take a while)
+* Visit your K-Link Registry: [http://localhost:8181/registry](http://localhost:8181/registry) (you can login to the K-Link Registry with the username `admin` and the password `123456789`.)
 
-[Learn more about how to install K-Link](./docs/installation.md)
+For an installation on a server in the Internet or more configuration options, see the documentation on [installation of the K-Link](./docs/installation.md). There you set relevant passwords, which is important when using the Software for any purpose.
 
-## K-Link Explore 
+## Components
 
-K-Link Explore is a static website that is included with a K-Link deployment as a courtesy webpage.
+The K-Link consists in different components:
 
-[Learn more about K-Link Explore](./docs/website.md)
-
-## Contribution
-
-Thank you for considering contributing to the K-Link!
-
-The contribution guide is not available yet, but in the meantime you can still submit Pull Requests.
+| Name | Image | Based on | Description |
+|------|-------|----------|-------------|
+| [K-Link Website](./docs/website.md) | `klink` | Static HTML | A simple website, the public face of a K-Link |
+| [K-Link Registry](https://github.com/k-box/k-link-registry) | `registry` | PHP and Symfony 4 | Orchestrator of applications connected to a K-Link and their permissions |
+| Database | `registry-db` | MariaDB | A database for the use of the K-Link Registry application. |
+| [K-Search API](https://github.com/k-box/k-search) | `ksearch` | PHP and Symfony 4 | Full text search component used for K-Link and K-Box |
+| [K-Search Engine](https://github.com/k-box/k-search-engine) | `engine` | Apache SOLR | Open Source search engine pre-configured for the K-Search |
 
 ## License
 
-The K-Link components are generally licensed under AGPL v3 (unless specified differently in the respecting repositories).
+![GNU AGPLv3 Image](https://www.gnu.org/graphics/agplv3-155x51.png)
 
-The K-Link Explore website (this repository) is licensed under AGPL v3. See [License.txt](./LICENSE.txt).
+This program is Free Software: You can use, study share and improve it at your will. Specifically you can redistribute and/or modify it under the terms of the [GNU Affero General Public License](./LICENSE.txt) version 3 as published by the Free Software Foundation.
+
+**Your contribution is very welcome**. Find more information in our [contribution guide](./contributing.md).
