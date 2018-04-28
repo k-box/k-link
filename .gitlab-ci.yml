@@ -1,9 +1,28 @@
+variables:
+    CONTAINER_RELEASE_IMAGE_BASE: $CI_REGISTRY/images/k-link
+
 generate_docker:
   stage: build
   tags:
     - shell
     - deploy
   script:
-    - docker build -t $CI_REGISTRY_IMAGE:${CI_BUILD_REF_NAME/v/} .
+    - docker build -t $CI_REGISTRY_IMAGE:${CI_BUILD_REF_NAME#v} .
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
-    - docker push $CI_REGISTRY_IMAGE:${CI_BUILD_REF_NAME/v/}
+    - docker push $CI_REGISTRY_IMAGE:${CI_BUILD_REF_NAME#v}
+
+tagged_release:
+  stage: deploy
+  script:
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+    - docker pull $CI_REGISTRY_IMAGE:${CI_BUILD_REF_NAME#v}
+    - docker login -u $REGISTRY_RELEASE_USERNAME -p $REGISTRY_RELEASE_PASSWORD $CI_REGISTRY
+    - docker tag $CI_REGISTRY_IMAGE:${CI_COMMIT_REF_NAME#v} "$CONTAINER_RELEASE_IMAGE_BASE:${CI_COMMIT_REF_NAME#v}"
+    - docker tag $CI_REGISTRY_IMAGE:${CI_COMMIT_REF_NAME#v} "$CONTAINER_RELEASE_IMAGE_BASE:latest"
+    - docker push "$CONTAINER_RELEASE_IMAGE_BASE:latest"
+    - docker push "$CONTAINER_RELEASE_IMAGE_BASE:${CI_COMMIT_REF_NAME#v}"
+  tags:
+    - shell
+    - deploy
+  only:
+    - tags
