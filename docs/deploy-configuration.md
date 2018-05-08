@@ -54,7 +54,7 @@ KREGISTRY_ADMIN_USERNAME: "admin@registry.local"
 KREGISTRY_ADMIN_PASSWORD: "*******"
 ```
 
-> **The password must be specified encrypted using bcrypt**
+> **The password must be specified encrypted using bcrypt**. When inserting it, escape the `$`, by adding another `$` char before, e.g. `$` become `$$`.
 
 > The minimum password length is 8 characters.
 
