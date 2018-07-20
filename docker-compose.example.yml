@@ -42,7 +42,7 @@ services:
       KREGISTRY_DOMAIN: "localhost:8181"
       KREGISTRY_BASE_URL_PATH: "/registry/" # required as the registry will be proxied on the /registry path
       KREGISTRY_ADMIN_USERNAME: "admin"
-      KREGISTRY_ADMIN_PASSWORD: "$2a$04$8PtF9FAbfKNvfamRnHhNh.aLujdrqdKqAgPQiEcEd3htxvXcYShN6" # insert a bcrypt encrypted password
+      KREGISTRY_ADMIN_PASSWORD: "$$2y$$10$$4YUGcB.1EwRKdCQO8hCeEeCwdCQUDVFF1VKEvIV.PcdB2VrVYuoq6" # insert a bcrypt encrypted password
       APP_SECRET: "2ffa8bc059abc54b195efg56b2fht0dc" # 32 ascii chars
       ## Mail service configuration, values are for example only, change them according to your mail server
       MAILER_HOST: "smtp.registry.local"
