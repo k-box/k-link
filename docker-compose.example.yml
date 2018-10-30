@@ -60,7 +60,7 @@ services:
 
   ## The Search Engine service
   engine:
-    image: "docker.klink.asia/images/k-search-engine:0.4.1"
+    image: "docker.klink.asia/images/k-search-engine:1.0.1"
     volumes:
       - "./storage/index:/opt/solr/k-search/k-search/data"
     expose:
@@ -72,7 +72,7 @@ services:
 
   ## The Search Engine API
   ksearch:
-    image: "docker.klink.asia/images/k-search:3.2.1-1"
+    image: "docker.klink.asia/images/k-search:3.5.1-1"
     expose:
       - "80"
     environment:
