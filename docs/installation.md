@@ -86,6 +86,12 @@ There are some handy commands you can use to manage your K-Link:
 
 For more information see complete [documentation on Docker Compose](https://docs.docker.com/compose/reference/up/).
 
+## Upgrade
+
+Check the [upgrade guide](./upgrade.md) if you have an already running K-Link that needs to be
+upgraded to the latest version.
+
 ## Next
 
 - [Running behind a reverse proxy](./reverse-proxy.md)
+- [Public facing website](./website.md)

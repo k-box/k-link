@@ -28,43 +28,34 @@ services:
     volumes:
       - "./storage/database:/var/lib/mysql"
 
-  ## the K-Registry
+  ## the K-Link Registry
   registry:
-    image: "docker.klink.asia/images/k-link-registry:0.2.0"
+    image: "oneofftech/k-link-registry:latest"
     environment:
-      ## Database configuration
-      DATABASE_HOST: "registry-db"
-      DATABASE_NAME: "kregistry" # make sure is equal to MYSQL_DATABASE
-      DATABASE_USER: "kregistry" # make sure is equal to MYSQL_USER
-      DATABASE_PASSWORD: "b25..." # make sure is equal to MYSQL_PASSWORD
-      ## K-Registry external access and default administrator
-      KREGISTRY_BASE_PROTOCOL: "http"
-      KREGISTRY_DOMAIN: "localhost:8181"
-      KREGISTRY_BASE_URL_PATH: "/registry/" # required as the registry will be proxied on the /registry path
-      KREGISTRY_ADMIN_USERNAME: "admin"
-      KREGISTRY_ADMIN_PASSWORD: "$$2y$$10$$4YUGcB.1EwRKdCQO8hCeEeCwdCQUDVFF1VKEvIV.PcdB2VrVYuoq6" # insert a bcrypt encrypted password
-      APP_SECRET: "2ffa8bc059abc54b195efg56b2fht0dc" # 32 ascii chars
+      REGISTRY_DB_HOST: "registry-db"
+      REGISTRY_DB_NAME: "kregistry"
+      REGISTRY_DB_USER: "kregistry"
+      REGISTRY_DB_PASS: "kregistry"
+      REGISTRY_HTTP_DOMAIN: "klink.example.example"
+      REGISTRY_HTTP_BASE_PATH: "/registry"
+      ## Default administrator
+      REGISTRY_ADMIN_USERNAME: "admin@registry.local"
+      REGISTRY_ADMIN_PASSWORD: "****"
       ## Mail service configuration, values are for example only, change them according to your mail server
-      MAILER_HOST: "smtp.registry.local"
-      MAILER_PORT: "587"
-      MAILER_USER: "user@registry.local"
-      MAILER_PASSWORD: "test"
-      MAILER_SENDER_ADDRESS: "kregistry@registry.local"
-      MAILER_SENDER_NAME: "K-Registry"
+      # REGISTRY_SMTP_HOST: "smtp.registry.local"
+      # REGISTRY_SMTP_PASS: "****"
+      # REGISTRY_SMTP_FROM: "K-Link <fake@klink.example.example>"
+      # REGISTRY_SMTP_PORT: "587"
     depends_on:
-      - registry-db
+      - database
     networks:
       - internal
-    expose:
-      - "80"
 
   ## The Search Engine service
   engine:
-    image: "docker.klink.asia/images/k-search-engine:1.0.1"
+    image: "oneofftech/k-search-engine:latest"
     volumes:
       - "./storage/index:/opt/solr/k-search/k-search/data"
-    expose:
-      - "8983"
     environment:
       KLINK_SOLR_MYHOST: engine # this is the external address of solr
     networks:
@@ -72,20 +63,18 @@ services:
 
   ## The Search Engine API
   ksearch:
-    image: "docker.klink.asia/images/k-search:3.5.1-1"
+    image: "oneofftech/k-search:v3.6.0-2"
     expose:
       - "80"
     environment:
-      ## Further datails about ENV configurations are available in `.env.dist`
       ## Application settings
       - APP_ENV=prod # Use the production environment, use "dev" for development
       - APP_DEBUG=0 # Enable the debug feature
       ## Solr search configuration
       - SOLR_HOST=engine # this is the external address of Solr
       - SOLR_CORE=k-search # this is the Solr index name
-      ## Registry configuration (disabled)
-      - KLINK_REGISTRY_ENABLED=0
-      ## A valid URL needs to be specified for the registry, even if the integration is disabled
+      ## Registry configuration
+      - KLINK_REGISTRY_ENABLED=1
       - KLINK_REGISTRY_API_URL=http://registry/
     volumes:
       - "./storage/data:/var/www/k-search/var/data-downloads"
