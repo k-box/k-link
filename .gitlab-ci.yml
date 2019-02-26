@@ -1,3 +1,16 @@
+stages:
+  - test
+  - build
+  - release
+  - deploy
+
+cache:
+  key: "klink"
+  paths:
+    - .composer-cache/
+    - .yarn/
+    - node_modules/
+
 variables:
     CONTAINER_RELEASE_IMAGE_BASE: $CI_REGISTRY/images/k-link
 
@@ -5,6 +18,16 @@ before_script:
   - export IMAGE_TAG="${CI_COMMIT_REF_NAME#v}_${CI_COMMIT_SHA:0:10}"
   - export CLEANED_CI_COMMIT_REF_NAME="${CI_COMMIT_REF_NAME#v}"
   - echo $IMAGE_TAG
+
+test:
+  image: "edbizarro/gitlab-ci-pipeline-php:7.1"
+  script:
+    - composer install --prefer-dist
+    - yarn config set cache-folder .yarn
+    - yarn
+    - yarn production
+  tags:
+    - docker
 
 generate_docker:
   stage: build
@@ -17,7 +40,7 @@ generate_docker:
     - docker push $CI_REGISTRY_IMAGE:${IMAGE_TAG}
 
 tagged_release:
-  stage: deploy
+  stage: release
   script:
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
     - docker pull $CI_REGISTRY_IMAGE:${IMAGE_TAG}
@@ -31,3 +54,29 @@ tagged_release:
     - deploy
   only:
     - tags
+
+
+## Deploy on canary environments
+.canary_deploy: &canary_deploy
+  when: manual
+  stage: deploy
+  tags:
+    - shell
+    - deploy
+  dependencies: []
+  script:
+    - DEPLOY_TAG=$([ -z "${CI_COMMIT_TAG}" ] && echo "${IMAGE_TAG}" || echo "${CLEANED_CI_COMMIT_REF_NAME}")
+    - DEPLOY_REGISTRY=$([ -z "${CI_COMMIT_TAG}" ] && echo "${CI_REGISTRY_IMAGE}" || echo "${CONTAINER_RELEASE_IMAGE_BASE}")
+    - echo "Deploying ${DEPLOY_REGISTRY} - ${DEPLOY_TAG}..."
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+    - docker pull $DEPLOY_REGISTRY:${DEPLOY_TAG}
+    - cd $DEPLOY_FOLDER
+    - docker tag $DEPLOY_REGISTRY:${DEPLOY_TAG} $DEPLOY_IMAGE
+    - docker-compose down -v && docker-compose up -d
+
+canary_juliet_deploy:
+  <<: *canary_deploy
+  environment: "Canary Juliet"
+  variables:
+    DEPLOY_FOLDER: $CANARY_J_FOLDER
+    DEPLOY_IMAGE: $CANARY_J_IMAGE
