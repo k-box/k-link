@@ -4,10 +4,10 @@ output
 /build_local/
 /build_staging/
 /build_production/
-/source/assets/build/css/
-/source/assets/build/fonts/
-/source/assets/build/js/
-/source/assets/build/mix-manifest.json
+# /source/assets/build/css/
+# /source/assets/build/fonts/
+# /source/assets/build/js/
+# /source/assets/build/mix-manifest.json
 /cache/
 /node_modules/
 /vendor/
