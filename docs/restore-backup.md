@@ -17,7 +17,7 @@ and can be copied on the machine.
 
 **before start**
 
-- Ensure that the server/machine you are restoring the backup on meet the [installation requirements](../requirements.md).
+- Ensure that the server/machine you are restoring the backup on meet the [installation requirements](./requirements.md).
 - Ensure that the backup contains at least
   - a Docker compose file, e.g. `docker-compose.yml`, and 
   - two folders `database` and `index`
@@ -77,7 +77,7 @@ labels:
  - "traefik.docker.network=reverseproxy_web"
 ```
 
-Before starting up the K-Link ensure that the [proxy service is properly configured](../reverse-proxy.md). 
+Before starting up the K-Link ensure that the [proxy service is properly configured](./reverse-proxy.md). 
 
 
 ### Start-up
