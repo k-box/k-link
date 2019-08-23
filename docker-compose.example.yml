@@ -47,7 +47,7 @@ services:
       # REGISTRY_SMTP_FROM: "K-Link <fake@klink.example.example>"
       # REGISTRY_SMTP_PORT: "587"
     depends_on:
-      - database
+      - registry-db
     networks:
       - internal
 
