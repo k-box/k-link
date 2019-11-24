@@ -16,13 +16,13 @@ networks:
 
 services:
   ## Database for the K-Registry
-  registry-db:
-    image: mariadb:10
+  database:
+    image: mariadb:10.3.17
     environment:
       MYSQL_DATABASE: "kregistry"
       MYSQL_USER: "kregistry"
       MYSQL_ROOT_PASSWORD: "238..."
-      MYSQL_PASSWORD: "b25..."
+      MYSQL_PASSWORD: "kregistry"
     networks:
       - internal
     volumes:
@@ -30,9 +30,9 @@ services:
 
   ## the K-Link Registry
   registry:
-    image: "klinktech/k-link-registry:0.2.0"
+    image: "klinktech/k-link-registry:0.4.0"
     environment:
-      REGISTRY_DB_HOST: "registry-db"
+      REGISTRY_DB_HOST: "database"
       REGISTRY_DB_NAME: "kregistry"
       REGISTRY_DB_USER: "kregistry"
       REGISTRY_DB_PASS: "kregistry"
@@ -47,7 +47,7 @@ services:
       # REGISTRY_SMTP_FROM: "K-Link <fake@klink.example.example>"
       # REGISTRY_SMTP_PORT: "587"
     depends_on:
-      - registry-db
+      - database
     networks:
       - internal
 
@@ -85,7 +85,7 @@ services:
       - internal
 
   klink:
-    image: "klinktech/k-link:0.1.0"
+    image: "klinktech/k-link:0.2.0"
     ports:
       - 8181:80
     depends_on:
