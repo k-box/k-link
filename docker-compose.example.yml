@@ -30,7 +30,7 @@ services:
 
   ## the K-Link Registry
   registry:
-    image: "klinktech/k-link-registry:0.4.0"
+    image: "klinktechnology/k-link-registry:0.4.0"
     environment:
       REGISTRY_DB_HOST: "database"
       REGISTRY_DB_NAME: "kregistry"
@@ -53,7 +53,7 @@ services:
 
   ## The Search Engine service
   engine:
-    image: "klinktech/k-search-engine:1.0.1-1"
+    image: "klinktechnology/k-search-engine:1.0.1-1"
     volumes:
       - "./storage/index:/opt/solr/k-search/k-search/data"
     environment:
@@ -63,7 +63,7 @@ services:
 
   ## The Search Engine API
   ksearch:
-    image: "klinktech/k-search:3.6.0-2"
+    image: "klinktechnology/k-search:3.6.0-2"
     expose:
       - "80"
     environment:
@@ -85,7 +85,7 @@ services:
       - internal
 
   klink:
-    image: "klinktech/k-link:0.2.0"
+    image: "klinktechnology/k-link:0.3.0"
     ports:
       - 8181:80
     depends_on:
