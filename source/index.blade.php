@@ -13,8 +13,8 @@
         </div>
 
         <div class="text-lg flex justify-around flex-row md:flex-column">
-            <a class="no-underline text-grey-darker p-2 hover:text-blue focus:text-blue active:text-blue-darker" href="https://k-link.technology">News</a>
-            <a class="no-underline text-grey-darker p-2 hover:text-blue focus:text-blue active:text-blue-darker" href="https://k-link.technology">Documentation</a>
+            <a class="no-underline text-grey-darker p-2 hover:text-blue focus:text-blue active:text-blue-darker" href="https://oneofftech.xyz/k-link/">News</a>
+            <a class="no-underline text-grey-darker p-2 hover:text-blue focus:text-blue active:text-blue-darker" href="https://oneofftech.xyz/k-link/">Documentation</a>
             <a class="no-underline text-grey-darker p-2 hover:text-blue focus:text-blue active:text-blue-darker" href="https://github.com/k-box/k-link">Contribute</a>
         </div>
     </div>

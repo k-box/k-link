@@ -4,7 +4,7 @@ Connects various information sources to a common digital library and provides se
 
 ![K-Link Logo](./docs/files/k-link-logo.png)
 
-Please **[visit the website](http://k-link.technology)** for more information!
+Please **[visit the website](https://oneofftech.xyz/k-link/)** for more information!
 
 If you find any issues with this application, please report them at the [issue tracker](./issues). Contributions are both encouraged and appreciated. If you like to contribute please check the website for more information.
 
